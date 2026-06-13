@@ -1,0 +1,8 @@
+{
+  "name": "curl-converter-nvim-node",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "curlconverter": "^4.12.0"
+  }
+}

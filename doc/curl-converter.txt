@@ -1,0 +1,152 @@
+*curl-converter.txt*  Convert curl commands to code         *curl-converter*
+
+====================================================================
+
+
+                                                    by @zeroaddresss
+
+====================================================================
+
+Plugin: curl-converter.nvim                               *curl-converter*
+
+Convert curl commands to Python, JavaScript, Go, Rust, PHP, Ruby, Java,
+C#, Swift, and 25+ other languages — directly inside NeoVim.
+
+                _                                     _            
+  ___ _   _ _ __| |       ___ ___  _ ____   _____ _ __| |_ ___ _ __ 
+ / __| | | | '__| |_____ / __/ _ \| '_ \ \ / / _ \ '__| __/ _ \ '__|
+| (__| |_| | |  | |_____| (_| (_) | | | \ V /  __/ |  | ||  __/ |   
+ \___|\__,_|_|  |_|      \___\___/|_| |_|\_/ \___|_|   \__\___|_|   
+                                                    by @zeroaddresss
+
+==============================================================================
+Contents                                  *curl-converter-contents*
+
+  1. Introduction ..................... |curl-converter-introduction|
+  2. Requirements ..................... |curl-converter-requirements|
+  3. Installation ..................... |curl-converter-installation|
+  4. Setup ............................ |curl-converter-setup|
+  5. Commands ......................... |curl-converter-commands|
+  6. Configuration .................... |curl-converter-configuration|
+  7. Keymaps .......................... |curl-converter-keymaps|
+  8. Supported Languages .............. |curl-converter-supported-languages|
+
+==============================================================================
+1. Introduction                                    *curl-converter-introduction*
+
+curl-converter.nvim is a NeoVim plugin that converts cURL commands into
+production-ready code in 30+ programming languages. It uses the
+curlconverter npm package as its engine — the same engine powering
+https://curlconverter.com.
+
+==============================================================================
+2. Requirements                                    *curl-converter-requirements*
+
+  • NeoVim >= 0.10 (for vim.system support)
+  • Node.js >= 18 (for curlconverter npm package)
+
+The curlconverter npm dependency is installed automatically the first time
+you use the plugin (or when you call |:CurlConvertInstall|).
+
+==============================================================================
+3. Installation                                    *curl-converter-installation*
+
+Using lazy.nvim (recommended) >
+
+    {
+      "zeroaddresss/curl-converter.nvim",
+      cmd = { "CurlConvert", "CurlConvertPaste" },
+      opts = {},
+    }
+
+Using packer.nvim >
+
+    use {
+      "zeroaddresss/curl-converter.nvim",
+      config = function()
+        require("curl-converter").setup({})
+      end,
+    }
+
+Using vim-plug >
+
+    Plug "zeroaddresss/curl-converter.nvim"
+    lua require("curl-converter").setup({})
+
+==============================================================================
+4. Setup                                              *curl-converter-setup*
+
+The simplest setup requires no configuration:
+
+>lua
+  require("curl-converter").setup({})
+<
+
+==============================================================================
+5. Commands                                            *curl-converter-commands*
+
+                                                  *:CurlConvert*
+:CurlConvert
+    Open the input buffer to paste a curl command, then select the target
+    language and display the result in a floating window.
+
+                                              *:CurlConvertPaste*
+:CurlConvertPaste
+    Skip the input buffer — use the curl command from the clipboard
+    (register "+") directly.
+
+                                            *:CurlConvertInstall*
+:CurlConvertInstall
+    Manually install or reinstall the curlconverter npm dependency.
+
+==============================================================================
+6. Configuration                                    *curl-converter-configuration*
+
+You can override defaults by passing a table to `setup()`:
+
+>lua
+  require("curl-converter").setup({
+    node_path = "node",              -- Path to Node.js binary
+    auto_install_deps = true,        -- Auto-install npm deps on setup
+    output_window = {
+      border = "rounded",            -- Border style: "rounded", "single", etc.
+      width = 0.8,                   -- Width relative to editor (0.0 - 1.0)
+      height = 0.8,                  -- Height relative to editor (0.0 - 1.0)
+    },
+    keymaps = {
+      close = "q",                   -- Close output window
+      yank = "y",                    -- Yank code to clipboard
+      reselect = "r",                -- Re-select language
+    },
+  })
+<
+
+==============================================================================
+7. Keymaps                                              *curl-converter-keymaps*
+
+Input buffer >
+  <CR>        Confirm curl command and open language picker
+  <Esc>       Cancel and close
+
+Output window >
+  q           Close output window
+  y / Y       Yank code to registers " and +
+  r           Re-select target language
+
+==============================================================================
+8. Supported Languages                  *curl-converter-supported-languages*
+
+  Python (Requests, http.client)
+  JavaScript (fetch, jQuery, XHR)
+  Node.js (fetch, Axios, Got, Ky, request, SuperAgent, http)
+  Go, Rust
+  PHP (cURL, Guzzle, Requests)
+  Ruby (Net::HTTP, HTTParty)
+  Java (HttpClient, HttpURLConnection, jsoup, OkHttp)
+  C#, Swift, Objective-C, Dart, Kotlin
+  PowerShell (Invoke-RestMethod, Invoke-WebRequest)
+  CLI (HTTP, HTTPie, Wget)
+  Ansible, C, Clojure, ColdFusion, Elixir, JSON, Julia, Lua,
+  MATLAB, OCaml, Perl, R (httr, httr2), HAR
+
+  vim:tw=78:ts=8:ft=help:norl:
