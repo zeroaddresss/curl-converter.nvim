@@ -40,6 +40,25 @@ local function find_convert_mjs()
   return nil
 end
 
+local function copy_convert_mjs(dir)
+  local src = find_convert_mjs()
+  if not src then
+    return false, "Could not find convert.mjs to copy"
+  end
+
+  local ok, lines = pcall(vim.fn.readfile, src, "b")
+  if not ok then
+    return false, lines
+  end
+
+  local wrote, result = pcall(vim.fn.writefile, lines, dir .. "/convert.mjs", "b")
+  if not wrote or result ~= 0 then
+    return false, result or "write failed"
+  end
+
+  return true, nil
+end
+
 function M.ensure_installed()
   if not config.options.auto_install_deps then
     return true
@@ -49,9 +68,9 @@ function M.ensure_installed()
       M.install()
       return false
     end
-    local src = find_convert_mjs()
-    if src then
-      vim.fn.system({ "cp", src, M.node_dir() .. "/convert.mjs" })
+    local ok, err = copy_convert_mjs(M.node_dir())
+    if not ok then
+      vim.notify("[curl-converter] " .. tostring(err), vim.log.levels.WARN)
     end
   end
   return M.is_installed()
@@ -63,6 +82,10 @@ function M.install(callback)
       table.insert(install_callbacks, callback)
     end
     return
+  end
+
+  if callback then
+    table.insert(install_callbacks, callback)
   end
 
   installing = true
@@ -82,11 +105,9 @@ function M.install(callback)
     vim.fn.writefile(vim.split(content, "\n", { plain = true }), package_json_path)
   end
 
-  local src = find_convert_mjs()
-  if src then
-    vim.fn.system({ "cp", src, dir .. "/convert.mjs" })
-  else
-    vim.notify("[curl-converter] Could not find convert.mjs to copy", vim.log.levels.WARN)
+  local copied, copy_err = copy_convert_mjs(dir)
+  if not copied then
+    vim.notify("[curl-converter] " .. tostring(copy_err), vim.log.levels.WARN)
   end
 
   local env = vim.fn.extend(vim.fn.environ(), { CXXFLAGS = "-std=c++20" })
