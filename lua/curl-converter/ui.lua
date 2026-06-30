@@ -68,7 +68,11 @@ function M._open_input_buffer(prefill)
 
   local function confirm_input()
     local lines = vim.api.nvim_buf_get_lines(input_buf, 0, -1, false)
-    curl_command = table.concat(lines, "\n"):gsub("^\n*", ""):gsub("\n*$", "")
+    curl_command = table.concat(lines, "\n"):match("^%s*(.-)%s*$") or ""
+    if curl_command == "" then
+      vim.notify("[curl-converter] No curl command provided", vim.log.levels.WARN)
+      return
+    end
     M._close_input_buffer()
     M._pick_language()
   end
@@ -324,9 +328,7 @@ function M._convert_and_show(language)
       vim.notify("[curl-converter] " .. err, vim.log.levels.ERROR)
       return
     end
-    vim.schedule(function()
-      M._show_output(code, language, warnings)
-    end)
+    M._show_output(code, language, warnings)
   end)
 end
 

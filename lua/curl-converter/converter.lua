@@ -3,7 +3,11 @@ local installer = require("curl-converter.installer")
 
 local M = {}
 
-local pending_queue = {}
+local function schedule_callback(callback, code, err, warnings)
+  vim.schedule(function()
+    callback(code, err, warnings)
+  end)
+end
 
 function M.convert_async(curl_cmd, language, callback)
   if not installer.is_installed() then
@@ -12,19 +16,19 @@ function M.convert_async(curl_cmd, language, callback)
         if success then
           M.convert_async(curl_cmd, language, callback)
         else
-          callback(nil, "curlconverter installation failed", nil)
+          schedule_callback(callback, nil, "curlconverter installation failed", nil)
         end
       end)
       return
     end
-    callback(nil, "curlconverter not installed. Run :CurlConvertInstall", nil)
+    schedule_callback(callback, nil, "curlconverter not installed. Run :CurlConvertInstall", nil)
     return
   end
 
   local dir = installer.node_dir()
   local script = dir .. "/convert.mjs"
   if vim.fn.filereadable(script) == 0 then
-    callback(nil, "convert.mjs not found in " .. dir, nil)
+    schedule_callback(callback, nil, "convert.mjs not found in " .. dir, nil)
     return
   end
 
@@ -61,16 +65,16 @@ function M.convert_async(curl_cmd, language, callback)
       end
 
       if error_msg then
-        callback(nil, error_msg, nil)
+        schedule_callback(callback, nil, error_msg, nil)
         return
       end
 
       if obj.code ~= 0 and code == "" and not error_msg then
-        callback(nil, "Conversion failed (exit code " .. obj.code .. ")", nil)
+        schedule_callback(callback, nil, "Conversion failed (exit code " .. obj.code .. ")", nil)
         return
       end
 
-      callback(code, nil, warnings)
+      schedule_callback(callback, code, nil, warnings)
     end
   )
 end
@@ -82,7 +86,10 @@ function M.convert(curl_cmd, language)
     result.err = err
     result.warnings = warnings
   end)
-  vim.wait(30000, function() return result.code ~= nil or result.err ~= nil end, 10)
+  local completed = vim.wait(30000, function() return result.code ~= nil or result.err ~= nil end, 10)
+  if not completed then
+    return nil, "Conversion timed out", nil
+  end
   return result.code, result.err, result.warnings
 end
 
