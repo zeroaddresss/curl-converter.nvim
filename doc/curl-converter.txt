@@ -1,13 +1,8 @@
 *curl-converter.txt*  Convert curl commands to code         *curl-converter*
 
-====================================================================
+==============================================================================
 
-
-                                                    by @zeroaddresss
-
-====================================================================
-
-Plugin: curl-converter.nvim                               *curl-converter*
+Plugin: curl-converter.nvim
 
 Convert curl commands to Python, JavaScript, Go, Rust, PHP, Ruby, Java,
 C#, Swift, and 25+ other languages — directly inside NeoVim.
@@ -55,7 +50,7 @@ Using lazy.nvim (recommended) >
 
     {
       "zeroaddresss/curl-converter.nvim",
-      cmd = { "CurlConvert", "CurlConvertPaste" },
+      cmd = { "CurlConvert", "CurlConvertPaste", "CurlConvertInstall" },
       opts = {},
     }
 

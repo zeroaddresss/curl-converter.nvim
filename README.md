@@ -8,6 +8,7 @@ Powered by the same engine as [curlconverter.com](https://curlconverter.com).
 
 - NeoVim >= 0.10
 - Node.js >= 18
+- Optional: telescope.nvim for fuzzy language search
 
 ## Installation
 
@@ -44,7 +45,7 @@ lua require("curl-converter").setup({})
 1. `CurlConvert<CR>`
 2. Paste your curl command in the input buffer
 3. Press `<CR>` to confirm
-4. Select the target language from the picker (Telescope with search)
+4. Select the target language from the picker (Telescope is used when installed)
 5. Press `y` to yank the result and close
 
 Or use `:CurlConvertPaste` to skip straight to language selection if you already have a curl command in your clipboard.
