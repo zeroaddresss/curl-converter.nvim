@@ -10,6 +10,7 @@ const langMap = {
   "node-axios": "toNodeAxiosWarn",
   "node-got": "toNodeGotWarn",
   "node-ky": "toNodeKyWarn",
+  "node-fetch": "toNodeFetchWarn",
   "node-request": "toNodeRequestWarn",
   "node-superagent": "toNodeSuperAgentWarn",
   "node-http": "toNodeHttpWarn",

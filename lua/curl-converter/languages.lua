@@ -18,7 +18,7 @@ M.groups = {
       { label = "Node.js + Axios",      value = "node-axios" },
       { label = "Node.js + Got",        value = "node-got" },
       { label = "Node.js + Ky",         value = "node-ky" },
-      { label = "Node.js + node-fetch", value = "node" },
+      { label = "Node.js + node-fetch", value = "node-fetch" },
       { label = "Node.js + request",    value = "node-request" },
       { label = "Node.js + SuperAgent", value = "node-superagent" },
       { label = "Node.js + http",       value = "node-http" },
